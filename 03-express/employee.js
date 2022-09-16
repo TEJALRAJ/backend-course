@@ -59,7 +59,7 @@ class Employee {
     }
 
     updateInfo() {
-
+        // TODO:
     }
 
     deleteEmployee(id) {
