@@ -7,18 +7,27 @@ class Employee {
 
         this.path = "employees.json";
 
-        const content = fs.readFileSync(this.path, {
-            encoding: 'utf-8'
+        // const content = fs.readFileSync(this.path, {
+        //     encoding: 'utf-8'
+        // });
+
+        fs.readFile(this.path, {
+            encoding: 'utf-8',
+        }, (err, content) => {
+            if (err) {
+                console.log(err.message)
+            } else {
+                this.data = JSON.parse(content);
+            }
         });
 
-        this.data = JSON.parse(content);
     }
 
     saveData() {
 
         const content = JSON.stringify(this.data, null, 2);
 
-        fs.writeFileSync(this.path, content, {
+        fs.writeFile(this.path, content, {
             encoding: 'utf-8'
         });
     }
@@ -58,11 +67,7 @@ class Employee {
         return employee;
     }
 
-    updateInfo() {
-        // TODO:
-    }
-
-    deleteEmployee(id) {
+    findEmployeeIndex(id) {
         
         let index = null;
         
@@ -76,10 +81,44 @@ class Employee {
             return item.id === id;
         });
 
+        return index;
+    }
+
+    updateInfo(id, updatedFields) { // 3, { email: "rohan.khurana@go.com" }
+        // TODO:
+        
+        const index = this.findEmployeeIndex(id);
+
         if (index === null) {
             throw new Error('Employee does not exist');
         }
 
+        let employee = this.data.employees[index];
+
+        // update the properties passed in updatedFields
+
+        employee = {
+            ...employee, // existing data
+            ...updatedFields, // overwrite keys with updated values
+        }
+
+        this.data.employees[index] = employee;
+
+        this.saveData();
+
+        return employee;
+
+    }
+
+    deleteEmployee(id) {
+        
+        let index = this.findEmployeeIndex(id);
+
+        if (index === null) {
+            throw new Error('Employee does not exist');
+        }
+
+        const employees = this.data.employees;
         employees.splice(index, 1);
 
         this.data.employees = employees;
