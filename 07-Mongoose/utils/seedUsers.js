@@ -1,6 +1,8 @@
 
-import userModel from '../database/user';
-import connectDatabbase from '../database/index';
+import userModel from '../database/user.js';
+import connectDatabbase from '../database/index.js';
+import {faker} from '@faker-js/faker'
+import crypto from 'crypto'
 
 async function seedUser(count = 100) {
 
@@ -12,6 +14,7 @@ async function seedUser(count = 100) {
         let user = {
             name: faker.name.fullName(),
             email: faker.internet.email(),
+            password: faker.internet.email(),
             age: crypto.randomInt(16, 55),
             image: faker.image.avatar(),
             verifiedEmail: Boolean(crypto.randomInt(0, 2)),
@@ -24,4 +27,4 @@ async function seedUser(count = 100) {
     await userModel.insertMany(users);
 }
 
-// seedUser(500)
+seedUser(500)

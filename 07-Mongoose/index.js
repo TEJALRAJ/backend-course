@@ -1,47 +1,6 @@
 
-import mongoose from "mongoose"
-import {faker} from '@faker-js/faker'
-import crypto from 'crypto'
-
-// connect to the database - local db or remote db
-// connection string - mongodb://127.0.0.1:27017/test-db
-// mongodb+srv://pt-web-04-b:<password>@cluster0.aajb25r.mongodb.net/?retryWrites=true&w=majority
-
-async function connectDatabbase() {
-    const connection = 'mongodb://127.0.0.1:27017/pt-web-05-test'
-
-    return new Promise((resolve, reject) => {
-        mongoose.connect(connection)
-        .then(() => {
-            console.log('Connected to database');
-            resolve();
-        })
-        .catch((err) => {
-            console.log('Could not connect to database')
-            reject(err);
-        })
-    })
-}
-
-// For each collection
-
-// First we need to define a schema - blueprint of our data
-
-// plain way to define the schema
-const userSchema = new mongoose.Schema({ // Class
-    name: String,
-    email: String,
-    age: Number,
-    image: String,
-    verifiedEmail: Boolean,
-    balance: Number,
-})
-
-
-// We need to create a model from that schema
-const userModel = mongoose.model('User', userSchema, 'users') // 'User' -> 'users'
-
-// Model will provide us all the function to do CRUD operations on that collection
+import connectDatabbase from "./database/index.js";
+import userModel from "./database/user.js";
 
 async function test() {
 
@@ -49,44 +8,46 @@ async function test() {
 
     // we will execute some queries on collections from here
 
-
-
     // Create User
 
-    // let user = await userModel.create({
-    //     name: 'John Doe',
-    //     email: 'john.doe@john.doe',
-    //     age: 32,
-    //     image: 'https://example.com/image.jpeg',
-    //     verifiedEmail: false,
-    //     balance: 23000.34
-    // })
+    let user = await userModel.create({
+        name: 'Xu Chi',
+        email: 'john.doe@john.doe',
+        password: 'Somedifficulttoguesspassword',
+        age: 32,
+        image: 'https://example.com/image.jpeg',
+        verifiedEmail: false,
+        balance: 23000.34
+    })
 
 
+    console.log('User added')
 
 
     // Create Multiple - Insert Many
 
-    // console.log('Users added')
-
-
-
 
     // Find All
-    // let users = await userModel.find()
+    let users = await userModel.find().limit(10)
 
-    // console.log(users); // empty array
+    // console.log(users);
 
 
 
 
     // Find One
 
-    // let user = await userModel.findOne({
-    //     email: 'Triston60@gmail.com'
-    // })
+    user = await userModel.findOne({
+        email: 'Alvah.Powlowski@gmail.com'
+    }, {
+        password: 1,
+        name: 1,
+        email: 1,
+        verifiedEmail: 1,
+    })
 
 
+    console.log(user);
 
 
 
